@@ -32,25 +32,17 @@ const Chat = ({ location }) => {
                 alert(error);
             }
         });
-
-        return () => {
-            socket.emit('disconnect');
-
-            socket.off();
-        }
     }, [ENDPOINT, location.search]);
 
     useEffect(() => {
+        socket.on('message', message => {
+            setMessages(messages => [...messages, message]);
+        });
+
         socket.on('roomData', ({ users }) => {
             setUsers(users);
         });
-    }, [users]);
-
-    useEffect(() => {
-        socket.on('message', (message) => {
-            setMessages([...messages, message]);
-        });
-    }, [messages]);
+    }, []);
 
     const sendMessage = (event) => {
         event.preventDefault();
